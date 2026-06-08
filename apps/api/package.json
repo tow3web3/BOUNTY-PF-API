@@ -1,0 +1,32 @@
+{
+  "name": "@agent-go/api",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@agent-go/shared": "*",
+    "@anthropic-ai/sdk": "^0.32.0",
+    "@hono/node-server": "^1.13.0",
+    "@hono/zod-validator": "^0.4.3",
+    "@x402/core": "~2.14.0",
+    "@x402/hono": "~2.14.0",
+    "@x402/svm": "~2.14.0",
+    "dotenv": "^17.4.2",
+    "hono": "^4.7.1",
+    "pino": "^9.6.0",
+    "pino-pretty": "^13.0.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.5"
+  }
+}

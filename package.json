@@ -1,0 +1,19 @@
+{
+  "name": "agent-go",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "dev": "concurrently -n api,worker -c cyan,yellow \"npm run dev -w apps/api\" \"npm run dev -w apps/worker\"",
+    "test": "npm run test --workspaces --if-present",
+    "db:generate": "npm run db:generate -w packages/shared",
+    "db:migrate": "npm run db:migrate -w packages/shared"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "typescript": "^5.7.3"
+  }
+}

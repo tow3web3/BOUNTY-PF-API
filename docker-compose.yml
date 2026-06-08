@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: agentgo
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./packages/shared/src/db/migrations/0000_initial.sql:/docker-entrypoint-initdb.d/0000_initial.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/agentgo
+      PAYMENT_ADDRESS: ${PAYMENT_ADDRESS}
+      X402_FACILITATOR_URL: ${X402_FACILITATOR_URL:-https://x402.org/facilitator}
+      X402_NETWORK: ${X402_NETWORK:-solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      PORT: 3000
+
+  worker:
+    build:
+      context: .
+      dockerfile: apps/worker/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/agentgo
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      SCRAPER_DRY_RUN: ${SCRAPER_DRY_RUN:-false}
+      SCRAPER_INTERVAL_SECONDS: ${SCRAPER_INTERVAL_SECONDS:-60}
+
+volumes:
+  postgres_data:
