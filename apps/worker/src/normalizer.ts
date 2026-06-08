@@ -1,63 +1,104 @@
 import { createHash } from "crypto";
-import { z } from "zod";
 import type { NormalizedBounty, BountyStatus } from "@agent-go/shared";
 
-// Raw schema from go.pump.fun (best-effort — fields may change)
-export const RawBountySchema = z.object({
-  id: z.union([z.string(), z.number()]).transform(String),
-  title: z.string().optional().default("Untitled"),
-  description: z.string().optional().default(""),
-  reward: z.union([z.string(), z.number()]).transform(Number).optional(),
-  reward_usd: z.union([z.string(), z.number()]).transform(Number).optional(),
-  amount: z.union([z.string(), z.number()]).transform(Number).optional(),
-  deadline: z.union([z.string(), z.number(), z.null()]).optional(),
-  url: z.string().optional(),
-  link: z.string().optional(),
-  slug: z.string().optional(),
-  status: z.string().optional().default("active"),
-  creator: z
-    .union([z.string(), z.object({ address: z.string() })])
-    .optional(),
-});
-
-export type RawBounty = z.infer<typeof RawBountySchema>;
+// Shape returned by livestream-api.pump.fun/bounties/v2/tasks
+interface LivestreamTask {
+  taskId: string;
+  title: string;
+  bodyMarkdown?: string;
+  creatorAddress?: string;
+  status?: string;               // "OPEN" | "PENDING_RESOLUTION" | "CLOSED" | "IN_DISPUTE_PERIOD"
+  expiresAt?: string;
+  rewardTotalUsd?: number;
+  rewardLegs?: Array<{
+    amountAtomic?: string;
+    mintAddress?: string;
+    decimalsSnapshot?: number;
+  }>;
+  coinAddress?: string;
+  // fields from older API versions (fallback)
+  id?: string | number;
+  description?: string;
+  reward_usd?: number | string;
+  reward?: number | string;
+  amount?: number | string;
+  url?: string;
+  link?: string;
+  slug?: string;
+  creator?: string | { address: string };
+}
 
 const STATUS_MAP: Record<string, BountyStatus> = {
-  active: "active",
   open: "active",
+  active: "active",
   live: "active",
+  pending_resolution: "active",   // still claimable
+  in_dispute_period: "active",
+  closed: "expired",
   completed: "completed",
   done: "completed",
   paid: "completed",
   expired: "expired",
-  closed: "expired",
   cancelled: "cancelled",
   canceled: "cancelled",
 };
 
 export function normalizeBounty(raw: unknown): NormalizedBounty | null {
-  const parsed = RawBountySchema.safeParse(raw);
-  if (!parsed.success) return null;
+  if (!raw || typeof raw !== "object") return null;
+  const d = raw as LivestreamTask;
 
-  const d = parsed.data;
-  const rewardUsd = d.reward_usd ?? d.reward ?? d.amount ?? 0;
+  // ── ID ───────────────────────────────────────────────────────────────────
+  const externalId = d.taskId ?? (d.id != null ? String(d.id) : null);
+  if (!externalId) return null;
+
+  // ── Title ────────────────────────────────────────────────────────────────
+  const title = (d.title ?? "").trim();
+  if (!title) return null;
+
+  // ── Description — prefer bodyMarkdown, fall back to description field ────
+  const description = (d.bodyMarkdown ?? d.description ?? "").trim();
+
+  // ── Reward USD ───────────────────────────────────────────────────────────
+  let rewardUsd: number;
+  if (typeof d.rewardTotalUsd === "number" && d.rewardTotalUsd > 0) {
+    rewardUsd = d.rewardTotalUsd;
+  } else {
+    const fallback = d.reward_usd ?? d.reward ?? d.amount ?? 0;
+    rewardUsd = Number(fallback);
+  }
   if (rewardUsd <= 0) return null;
 
+  // ── Status ───────────────────────────────────────────────────────────────
+  const rawStatus = (d.status ?? "active").toLowerCase();
+  const status = STATUS_MAP[rawStatus] ?? "active";
+
+  // ── Link ─────────────────────────────────────────────────────────────────
   const link =
-    d.url ?? d.link ?? (d.slug ? `https://go.pump.fun/bounty/${d.slug}` : null);
+    d.url ??
+    d.link ??
+    (d.taskId ? `https://pump.fun/go/${d.taskId}` : null) ??
+    (d.slug ? `https://pump.fun/go/${d.slug}` : null);
+
   if (!link) return null;
 
-  const deadline = parseDeadline(d.deadline);
-  const status = STATUS_MAP[d.status.toLowerCase()] ?? "active";
+  // ── Deadline — expiresAt (new API) or deadline (old API) ─────────────────
+  const deadlineRaw = (d as unknown as Record<string, unknown>).deadline;
+  const deadline = d.expiresAt
+    ? parseDate(d.expiresAt)
+    : deadlineRaw != null
+      ? parseDate(deadlineRaw as string | number)
+      : null;
+
+  // ── Creator address ───────────────────────────────────────────────────────
   const creatorAddress =
     typeof d.creator === "string"
       ? d.creator
-      : d.creator?.address ?? null;
+      : d.creator?.address ?? d.creatorAddress ?? null;
 
   return {
-    externalId: d.id,
-    title: d.title.trim(),
-    description: d.description.trim(),
+    externalId,
+    title,
+    description,
     rewardUsd,
     deadline,
     link,
@@ -67,7 +108,7 @@ export function normalizeBounty(raw: unknown): NormalizedBounty | null {
   };
 }
 
-function parseDeadline(value: string | number | null | undefined): Date | null {
+function parseDate(value: string | number | null | undefined): Date | null {
   if (value == null || value === "") return null;
   const d = typeof value === "number" ? new Date(value * 1000) : new Date(value);
   return isNaN(d.getTime()) ? null : d;
@@ -76,3 +117,6 @@ function parseDeadline(value: string | number | null | undefined): Date | null {
 export function hashDescription(text: string): string {
   return createHash("sha256").update(text).digest("hex").slice(0, 16);
 }
+
+// Keep RawBounty export for backward compat with tests
+export type RawBounty = LivestreamTask;
