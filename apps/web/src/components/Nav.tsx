@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function Nav() {
+export default function Nav({ page = "home" }: { page?: "home" | "docs" }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -11,12 +11,19 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  const links = [
-    { href: "#how-it-works", label: "Protocol" },
-    { href: "#endpoints", label: "Endpoints" },
-    { href: "#bounties", label: "Bounties" },
-    { href: "/api/v1/health", label: "Status", external: true },
-  ];
+  const links =
+    page === "docs"
+      ? [
+          { href: "#overview", label: "Overview" },
+          { href: "#architecture", label: "Architecture" },
+          { href: "#x402-deep-dive", label: "x402" },
+          { href: "#integration", label: "Integration" },
+        ]
+      : [
+          { href: "#how-it-works", label: "Protocol" },
+          { href: "#endpoints", label: "Endpoints" },
+          { href: "#bounties", label: "Bounties" },
+        ];
 
   return (
     <motion.nav
@@ -61,11 +68,26 @@ export default function Nav() {
             <span className="w-1.5 h-1.5 rounded-full bg-green animate-pulse-slow" />
             <span className="text-xs font-medium text-green">devnet live</span>
           </div>
+          {page === "docs" ? (
+            <a
+              href="#"
+              className="px-4 py-2 rounded-lg border border-border-bright text-white text-sm font-semibold hover:bg-white/5 transition-all duration-200"
+            >
+              ← Home
+            </a>
+          ) : (
+            <a
+              href="#docs"
+              className="px-4 py-2 rounded-lg border border-border-bright text-white text-sm font-semibold hover:bg-white/5 transition-all duration-200"
+            >
+              Docs
+            </a>
+          )}
           <a
-            href="#endpoints"
+            href={page === "docs" ? "#" : "#endpoints"}
             className="px-4 py-2 rounded-lg bg-purple text-white text-sm font-semibold hover:bg-purple/90 transition-all duration-200 hover:shadow-lg hover:shadow-purple/30"
           >
-            Explore API
+            {page === "docs" ? "← Back" : "Explore API"}
           </a>
         </div>
 
