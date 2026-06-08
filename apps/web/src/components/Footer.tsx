@@ -39,10 +39,10 @@ export default function Footer() {
 
           {/* Stack */}
           <div>
-            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Stack</h4>
+            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Built with</h4>
             <div className="flex flex-wrap gap-2">
-              {["Hono", "@x402/hono", "Drizzle ORM", "PostgreSQL", "Solana", "USDC", "Anthropic", "Vite + React"].map((t) => (
-                <span key={t} className="text-xs px-2 py-1 rounded-md bg-surface border border-border text-slate-500">
+              {["Hono", "@x402/hono", "Drizzle ORM", "claude-sonnet-4-6", "Vite + React"].map((t) => (
+                <span key={t} className="text-xs px-2 py-1 rounded-md bg-surface border border-border text-slate-500 font-mono">
                   {t}
                 </span>
               ))}
@@ -50,7 +50,14 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-border pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        {/* Thanks */}
+        <div className="border-t border-border pt-8 mb-6">
+          <p className="text-xs text-slate-600 italic">
+            Special thanks to <span className="text-slate-400 not-italic font-semibold">Alex</span> for helping ship this fast and fix the last bits of bullshit. 🤝
+          </p>
+        </div>
+
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-slate-600">
             Agent GO · Built with x402 v2 · Solana devnet
           </p>
