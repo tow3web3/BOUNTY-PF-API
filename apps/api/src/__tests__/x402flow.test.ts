@@ -67,7 +67,7 @@ vi.mock("@x402/hono", () => ({
         {
           x402Version: 2,
           error: "Payment Required",
-          accepts: [{ scheme: "exact", network: "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+          accepts: [{ scheme: "exact", network: "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
                       price: match.price, payTo: "TestWalletAddress" }],
         },
         402,
@@ -94,8 +94,8 @@ vi.mock("pino-pretty", () => ({}));
 process.env.DATABASE_URL = "postgresql://test:test@localhost/test";
 process.env.PAYMENT_ADDRESS = "TestAddr111111111111111111111111111";
 process.env.ANTHROPIC_API_KEY = "sk-ant-test";
-process.env.X402_FACILITATOR_URL = "https://x402.org/facilitator";
-process.env.X402_NETWORK = "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1";
+process.env.X402_FACILITATOR_URL = "https://api.cdp.coinbase.com/platform/v2/x402";
+process.env.X402_NETWORK = "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp";
 process.env.NODE_ENV = "test";
 process.env.PORT = "3001";
 

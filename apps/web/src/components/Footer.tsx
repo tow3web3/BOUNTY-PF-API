@@ -7,7 +7,7 @@ export default function Footer() {
       >
         <div className="flex items-center gap-4 text-[10px] tracking-widest" style={{ color: "#2a2a2a" }}>
           <span>BUILT WITH</span>
-          {["Hono", "@x402/hono", "Drizzle ORM", "claude-sonnet-4-6", "Vite + React"].map((t) => (
+          {["Hono", "@x402/hono", "Drizzle ORM", "Vite + React"].map((t) => (
             <span
               key={t}
               className="px-2 py-0.5 border border-[#1a1a1a] text-[10px]"
@@ -29,7 +29,7 @@ export default function Footer() {
           <span style={{ color: "#1a1a1a" }}>·</span>
           <span>x402 v2</span>
           <span style={{ color: "#1a1a1a" }}>·</span>
-          <span>solana devnet</span>
+          <span>solana mainnet</span>
           <span style={{ color: "#1a1a1a" }}>·</span>
           <span>2026</span>
         </div>

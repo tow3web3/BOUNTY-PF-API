@@ -278,7 +278,7 @@ export function createLandingRouter(db: DB) {
     <div class="stat-label">Protocol</div>
   </div>
   <div class="stat">
-    <div class="stat-value">devnet</div>
+    <div class="stat-value">mainnet</div>
     <div class="stat-label">Solana Network</div>
   </div>
 </div>
@@ -304,7 +304,7 @@ export function createLandingRouter(db: DB) {
     <div class="flow-step">
       <div class="icon">💳</div>
       <div class="label">Sign USDC tx</div>
-      <div class="sub">$0.01 on Solana<br/>devnet</div>
+      <div class="sub">$0.01 on Solana<br/>mainnet</div>
     </div>
     <div class="flow-arrow">→</div>
     <div class="flow-step">
@@ -464,7 +464,7 @@ curl -X POST http://localhost:4021/v1/subscriptions \
 </section>
 
 <footer>
-  <p>Bountr · x402 v2 · Solana devnet · Built with Hono + Drizzle + @x402/hono</p>
+  <p>Bountr · x402 v2 · Solana mainnet · Built with Hono + Drizzle + @x402/hono</p>
   <p style="margin-top:8px"><a href="https://x402.org" target="_blank">x402.org</a> · <a href="https://go.pump.fun" target="_blank">Pump.fun GO</a></p>
 </footer>
 

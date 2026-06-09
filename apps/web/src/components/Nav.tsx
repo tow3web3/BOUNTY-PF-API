@@ -41,7 +41,7 @@ export default function Nav({ page = "home", onNavigate }: { page?: Page; onNavi
             style={{ background: online ? "#00ff88" : "#333", boxShadow: online ? "0 0 4px #00ff88" : "none" }}
           />
           <span className="text-[10px]" style={{ color: online ? "#00ff88" : "#333" }}>
-            {online ? "DEVNET" : "OFFLINE"}
+            {online ? "MAINNET" : "OFFLINE"}
           </span>
         </div>
 

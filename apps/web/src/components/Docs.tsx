@@ -134,7 +134,7 @@ function S00() {
     <P>Bountr is an open REST API that sits in front of Pump.fun GO bounty data and classifies which bounties AI agents can actually execute autonomously.</P>
     <KV rows={[
       ["Protocol",    "x402 v2 — HTTP 402 native micropayments", true],
-      ["Chain",       "Solana (devnet: EtWT… / mainnet: 5eykt…)"],
+      ["Chain",       "Solana mainnet · 5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp"],
       ["AI Engine",   "claude-sonnet-4-6 — bounty classification"],
       ["DB",          "PostgreSQL 15 + Drizzle ORM"],
       ["API Server",  "Hono · port 4021"],
@@ -263,7 +263,7 @@ content-length: 2
   "x402Version": 2,
   "accepts": [{
     "scheme":            "exact",
-    "network":           "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+    "network":           "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
     "amount":            "10000",
     "asset":             "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
     "payTo":             "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
@@ -464,7 +464,7 @@ function S07() {
 function S08() {
   return <>
     <H>Build an Agent</H>
-    <P>Use <Code>@x402/fetch</Code> to wrap native <Code>fetch()</Code> with automatic 402 handling. Your agent just needs a funded Solana devnet wallet.</P>
+    <P>Use <Code>@x402/fetch</Code> to wrap native <Code>fetch()</Code> with automatic 402 handling. Your agent just needs a funded Solana mainnet wallet.</P>
     <Block lang="typescript">{`
 import { wrapFetch } from "@x402/fetch";
 import { createSolanaWallet } from "@x402/svm/wallet";
@@ -524,7 +524,7 @@ npm run dev -w apps/web      # Frontend on :5173
 # Seed bounties from pump.fun GO
 DATABASE_URL=... npx tsx scripts/seed-bounties.ts
     `}</Block>
-    <Sub>Switch to Solana mainnet</Sub>
+    <Sub>Solana mainnet config</Sub>
     <Block lang="sh">{`
 # .env
 X402_NETWORK=solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp

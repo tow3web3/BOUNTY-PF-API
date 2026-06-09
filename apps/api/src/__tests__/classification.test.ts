@@ -17,8 +17,8 @@ vi.mock("../config", () => ({
     PORT: 3000,
     DATABASE_URL: "postgresql://test:test@localhost/test",
     PAYMENT_ADDRESS: "TestAddr",
-    X402_FACILITATOR_URL: "https://x402.org/facilitator",
-    X402_NETWORK: "solana:devnet",
+    X402_FACILITATOR_URL: "https://api.cdp.coinbase.com/platform/v2/x402",
+    X402_NETWORK: "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
   },
 }));
 

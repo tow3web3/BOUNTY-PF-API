@@ -9,7 +9,7 @@ const TRACE = [
   { ts: "00:00.015", dir: "·", from: "AGENT",        to: null,           status: null,  text: "sign with wallet keypair",                   note: "" },
   { ts: "00:00.190", dir: "→", from: "AGENT",        to: "SERVER",      status: null,  text: "GET /v1/bounties HTTP/1.1",                   note: "retry with payment" },
   { ts: null,        dir: null, from: null,            to: null,          status: null,  text: "X-PAYMENT: eyJzY2hlbWUiOiJleGFjdCIsInNpZ...", note: "base64 SignedPayment" },
-  { ts: "00:00.191", dir: "·", from: "FACILITATOR",  to: null,           status: null,  text: "verify on-chain  ·  settle USDC  ·  return proof", note: "x402.org / devnet" },
+  { ts: "00:00.191", dir: "·", from: "FACILITATOR",  to: null,           status: null,  text: "verify on-chain  ·  settle USDC  ·  return proof", note: "x402.org / mainnet" },
   { ts: "00:00.380", dir: "←", from: "SERVER",       to: "AGENT",       status: 200,   text: "200 OK",                                     note: "$0.01 settled" },
   { ts: null,        dir: null, from: null,            to: null,          status: null,  text: "X-PAYMENT-RESPONSE: eyJzZXR0bGVkIjp0cnVlLC...", note: "" },
   { ts: null,        dir: null, from: null,            to: null,          status: null,  text: '{ "data": [...bounties], "pagination": { "total": 0 } }', note: "" },
@@ -57,7 +57,7 @@ export default function HowItWorks() {
               x402 PROTOCOL FLOW
             </span>
           </div>
-          <span className="text-[10px]" style={{ color: "#2e2e2e" }}>HTTP trace · devnet</span>
+          <span className="text-[10px]" style={{ color: "#2e2e2e" }}>HTTP trace · mainnet</span>
         </div>
 
         {/* Columns header */}

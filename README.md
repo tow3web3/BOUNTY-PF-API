@@ -52,7 +52,7 @@ Agent → GET /v1/bounties/automatable
 ### Prerequisites
 - Node.js ≥ 22
 - Docker + Docker Compose
-- A Solana wallet (devnet or mainnet) to receive payments
+- A Solana wallet (mainnet or mainnet) to receive payments
 - An [Anthropic API key](https://console.anthropic.com)
 
 ### 1. Install dependencies
@@ -213,7 +213,7 @@ npx tsx examples/agent-consumer.ts
      "accepts": [{
        "scheme": "exact",
        "price": "$0.05",
-       "network": "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+       "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
        "payTo": "<PAYMENT_ADDRESS>"
      }]
    }
@@ -233,7 +233,7 @@ npx tsx examples/agent-consumer.ts
 | `PAYMENT_ADDRESS` | ✅ | Solana wallet to receive USDC |
 | `ANTHROPIC_API_KEY` | ✅ | Claude API key for classification |
 | `X402_FACILITATOR_URL` | ✅ | x402 facilitator endpoint |
-| `X402_NETWORK` | ✅ | CAIP-2 network (devnet or mainnet) |
+| `X402_NETWORK` | ✅ | CAIP-2 network (mainnet or mainnet) |
 | `PORT` | — | API port (default: 3000) |
 | `SCRAPER_DRY_RUN` | — | `true` to skip actual scraping |
 | `SCRAPER_INTERVAL_SECONDS` | — | Poll interval in seconds (default: 60) |
