@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { API_BASE } from "../hooks/useApi";
 
 interface Bounty {
   id: string;
@@ -38,8 +39,8 @@ export default function Bounties() {
   const load = () => {
     setCountdown(30);
     Promise.all([
-      fetch("/api/v1/bounties?limit=50").then(r => r.json()),
-      fetch("/api/v1/bounties/automatable?limit=50").then(r => r.json()),
+      fetch(`${API_BASE}/v1/bounties?limit=50`).then(r => r.json()),
+      fetch(`${API_BASE}/v1/bounties/automatable?limit=50`).then(r => r.json()),
     ])
       .then(([allData, autoData]) => {
         setBounties((allData as { data?: Bounty[] }).data ?? []);

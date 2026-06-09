@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useHealth } from "../hooks/useApi";
+import { useHealth, API_BASE } from "../hooks/useApi";
 
 type NavigateFn = (p: "home" | "docs" | "bounties") => void;
 
@@ -40,7 +40,7 @@ export default function Hero({ onNavigate }: { onNavigate?: NavigateFn }) {
   }, []);
 
   useEffect(() => {
-    fetch("/api/v1/bounties?limit=1")
+    fetch(`${API_BASE}/v1/bounties?limit=1`)
       .then(r => r.json())
       .then((d: { pagination?: { total?: number } }) => {
         if (d.pagination?.total) setTotalBounties(d.pagination.total);

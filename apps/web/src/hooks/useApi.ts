@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const BASE = "/api";
+export const API_BASE = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.replace(/\/$/, "") ?? "/api";
 
 export interface Bounty {
   id: string;
@@ -54,10 +54,10 @@ function useFetch<T>(url: string, interval = 30000) {
 }
 
 export function useHealth() {
-  return useFetch<Health>(`${BASE}/v1/health`);
+  return useFetch<Health>(`${API_BASE}/v1/health`);
 }
 
 export function useBountiesCount() {
-  const { data } = useFetch<{ pagination: { total: number } }>(`${BASE}/v1/health`, 30000);
+  const { data } = useFetch<{ pagination: { total: number } }>(`${API_BASE}/v1/health`, 30000);
   return data;
 }

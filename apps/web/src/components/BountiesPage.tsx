@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { API_BASE } from "../hooks/useApi";
 
 interface Bounty {
   id: string;
@@ -52,8 +53,8 @@ export default function BountiesPage({ onBack }: { onBack?: () => void }) {
     setExpanded(null);
     try {
       const url = tab === "all"
-        ? `/api/v1/bounties?limit=${LIMIT}&page=${page}`
-        : `/api/v1/bounties/automatable?limit=${LIMIT}&page=${page}`;
+        ? `${API_BASE}/v1/bounties?limit=${LIMIT}&page=${page}`
+        : `${API_BASE}/v1/bounties/automatable?limit=${LIMIT}&page=${page}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json() as { data: Bounty[]; pagination: Pagination };
@@ -74,8 +75,8 @@ export default function BountiesPage({ onBack }: { onBack?: () => void }) {
 
   // Fetch totals for both tabs on mount
   useEffect(() => {
-    fetch(`/api/v1/bounties?limit=1`).then(r => r.json()).then((d: { pagination: Pagination }) => setTotalAll(d.pagination.total)).catch(() => null);
-    fetch(`/api/v1/bounties/automatable?limit=1`).then(r => r.json()).then((d: { pagination: Pagination }) => setTotalAuto(d.pagination.total)).catch(() => null);
+    fetch(`${API_BASE}/v1/bounties?limit=1`).then(r => r.json()).then((d: { pagination: Pagination }) => setTotalAll(d.pagination.total)).catch(() => null);
+    fetch(`${API_BASE}/v1/bounties/automatable?limit=1`).then(r => r.json()).then((d: { pagination: Pagination }) => setTotalAuto(d.pagination.total)).catch(() => null);
   }, []);
 
   useEffect(() => { load(); }, [load]);
