@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: agentgo
+      POSTGRES_DB: bountr
     ports:
       - "5432:5432"
     volumes:
@@ -31,7 +31,7 @@ services:
       - "${PORT:-3000}:3000"
     environment:
       NODE_ENV: production
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/agentgo
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/bountr
       PAYMENT_ADDRESS: ${PAYMENT_ADDRESS}
       X402_FACILITATOR_URL: ${X402_FACILITATOR_URL:-https://x402.org/facilitator}
       X402_NETWORK: ${X402_NETWORK:-solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1}
@@ -48,7 +48,7 @@ services:
         condition: service_healthy
     environment:
       NODE_ENV: production
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/agentgo
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/bountr
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       SCRAPER_DRY_RUN: ${SCRAPER_DRY_RUN:-false}
       SCRAPER_INTERVAL_SECONDS: ${SCRAPER_INTERVAL_SECONDS:-60}

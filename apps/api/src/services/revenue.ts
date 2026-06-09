@@ -1,5 +1,5 @@
-import type { DB } from "@agent-go/shared";
-import { schema } from "@agent-go/shared";
+import type { DB } from "@bountr/shared";
+import { schema } from "@bountr/shared";
 import { logger } from "../logger";
 
 export async function trackRevenue(

@@ -2,12 +2,12 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { eq, and, desc, gt, sql } from "drizzle-orm";
 import { z } from "zod";
-import type { DB } from "@agent-go/shared";
+import type { DB } from "@bountr/shared";
 import {
   schema,
   PaginationQuerySchema,
   BountyStatusSchema,
-} from "@agent-go/shared";
+} from "@bountr/shared";
 import { classifyBounty } from "../services/classification";
 import { logger } from "../logger";
 

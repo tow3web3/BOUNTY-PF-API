@@ -1,7 +1,7 @@
 /**
  * Agent Consumer Example
  *
- * Demonstrates how an AI agent pays for and consumes the Agent GO API using
+ * Demonstrates how an AI agent pays for and consumes the Bountr API using
  * the @x402/fetch wrapper and a Solana wallet.
  *
  * Usage:
@@ -107,7 +107,7 @@ async function subscribeToNewBounties(agentFetch: typeof fetch) {
   console.log(`  HMAC secret: ${sub.hmacSecret}`);
   console.log("\nVerify incoming webhooks with:");
   console.log(
-    `  HMAC-SHA256(secret="${sub.hmacSecret}", body=<payload>) === X-Agent-Go-Signature header`,
+    `  HMAC-SHA256(secret="${sub.hmacSecret}", body=<payload>) === X-Bountr-Signature header`,
   );
 
   return sub;

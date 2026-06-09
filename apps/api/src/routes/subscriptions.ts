@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
-import type { DB } from "@agent-go/shared";
-import { schema, CreateSubscriptionBodySchema } from "@agent-go/shared";
+import type { DB } from "@bountr/shared";
+import { schema, CreateSubscriptionBodySchema } from "@bountr/shared";
 import { generateHmacSecret } from "../services/webhook";
 import { logger } from "../logger";
 

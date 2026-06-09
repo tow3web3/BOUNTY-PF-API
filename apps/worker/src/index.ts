@@ -1,6 +1,6 @@
 import cron from "node-cron";
 import { and, eq, inArray } from "drizzle-orm";
-import { createDb, schema, type NormalizedBounty } from "@agent-go/shared";
+import { createDb, schema, type NormalizedBounty } from "@bountr/shared";
 import { scrapeBounties } from "./scraper";
 import { hashDescription } from "./normalizer";
 import { classifyNewBounties } from "./classifier";

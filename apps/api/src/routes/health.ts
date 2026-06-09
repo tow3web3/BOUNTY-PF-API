@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import type { DB } from "@agent-go/shared";
+import type { DB } from "@bountr/shared";
 import { sql } from "drizzle-orm";
 import { getRevenueStats } from "../services/revenue";
 

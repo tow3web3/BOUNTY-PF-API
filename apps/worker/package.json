@@ -1,5 +1,5 @@
 {
-  "name": "@agent-go/worker",
+  "name": "@bountr/worker",
   "version": "1.0.0",
   "private": true,
   "main": "./dist/index.js",
@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@agent-go/shared": "*",
+    "@bountr/shared": "*",
     "@anthropic-ai/sdk": "^0.32.0",
     "node-cron": "^3.0.3",
     "pino": "^9.6.0",

@@ -5,7 +5,7 @@ import path from "path";
 
 async function runMigrations() {
   const connectionString =
-    process.env.DATABASE_URL ?? "postgresql://postgres:postgres@localhost:5432/agentgo";
+    process.env.DATABASE_URL ?? "postgresql://postgres:postgres@localhost:5432/bountr";
 
   const pool = new Pool({ connectionString });
   const db = drizzle(pool);

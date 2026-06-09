@@ -1,7 +1,7 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { createDb } from "@agent-go/shared";
+import { createDb } from "@bountr/shared";
 import { config } from "./config";
 import { logger } from "./logger";
 import { createHealthRouter } from "./routes/health";
@@ -47,7 +47,7 @@ app.onError((err, c) => {
 });
 
 serve({ fetch: app.fetch, port: config.PORT }, (info) => {
-  logger.info({ port: info.port }, "Agent GO API started");
+  logger.info({ port: info.port }, "Bountr API started");
 });
 
 export default app;

@@ -60,7 +60,7 @@ export default function Hero({ onNavigate }: { onNavigate?: NavigateFn }) {
           {/* Title */}
           <div className="mb-10">
             <div className="text-[10px] tracking-widest mb-4" style={{ color: "#2e2e2e" }}>
-              AGENT GO / v1.0
+              BOUNTR / v1.0
             </div>
             <h1
               className="font-black leading-none tracking-tight mb-5"
@@ -156,7 +156,7 @@ export default function Hero({ onNavigate }: { onNavigate?: NavigateFn }) {
               style={{ background: "#080808" }}
             >
               <span className="text-[10px] tracking-widest" style={{ color: "#2e2e2e" }}>
-                agent-go / terminal
+                bountr / terminal
               </span>
               <div className="flex items-center gap-2">
                 <span

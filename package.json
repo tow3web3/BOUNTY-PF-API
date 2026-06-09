@@ -1,5 +1,5 @@
 {
-  "name": "agent-go",
+  "name": "bountr",
   "private": true,
   "workspaces": [
     "apps/*",

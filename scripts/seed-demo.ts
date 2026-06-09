@@ -6,7 +6,7 @@ import { createDb, schema } from "../packages/shared/src/index";
 
 const db = createDb(
   process.env.DATABASE_URL ??
-    "postgresql://gabrieldevarine@localhost:5432/agentgo",
+    "postgresql://gabrieldevarine@localhost:5432/bountr",
 );
 
 const DEMO_BOUNTIES = [

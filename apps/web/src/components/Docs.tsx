@@ -131,7 +131,7 @@ function Grid({ heads, rows }: { heads: string[]; rows: string[][] }) {
 function S00() {
   return <>
     <H>Overview</H>
-    <P>Agent GO is an open REST API that sits in front of Pump.fun GO bounty data and classifies which bounties AI agents can actually execute autonomously.</P>
+    <P>Bountr is an open REST API that sits in front of Pump.fun GO bounty data and classifies which bounties AI agents can actually execute autonomously.</P>
     <KV rows={[
       ["Protocol",    "x402 v2 — HTTP 402 native micropayments", true],
       ["Chain",       "Solana (devnet: EtWT… / mainnet: 5eykt…)"],
@@ -154,7 +154,7 @@ packages/shared  Drizzle schema, types, Zod schemas
 function S01() {
   return <>
     <H>Pump.fun GO Bounties</H>
-    <P>Pump.fun GO is a decentralized task marketplace on Solana. Creators post bounties with USDC or SOL rewards. There is <strong style={{ color: "#e8e8e8" }}>no public API</strong> — Agent GO discovered the internal API by intercepting network calls via Playwright.</P>
+    <P>Pump.fun GO is a decentralized task marketplace on Solana. Creators post bounties with USDC or SOL rewards. There is <strong style={{ color: "#e8e8e8" }}>no public API</strong> — Bountr discovered the internal API by intercepting network calls via Playwright.</P>
     <Block lang="sh">{`
 # Discovered internal API — no auth required
 GET https://livestream-api.pump.fun/bounties/v2/tasks
@@ -172,7 +172,7 @@ GET https://livestream-api.pump.fun/bounties/v2/stats
         ["physical",            "NO",    "Go to a location IRL, attend an event, film yourself"],
       ]}
     />
-    <P>The insight: Pump.fun GO has no filter for automatable tasks. Agent GO adds a Claude classification layer so agents only see opportunities they can act on.</P>
+    <P>The insight: Pump.fun GO has no filter for automatable tasks. Bountr adds a Claude classification layer so agents only see opportunities they can act on.</P>
     <Note kind="info"><Code>PENDING_RESOLUTION</Code> and <Code>IN_DISPUTE_PERIOD</Code> phases are also scraped — bounties remain claimable during those windows.</Note>
   </>;
 }
@@ -193,7 +193,7 @@ function S02() {
         ["Idle cost",   "$0 or plan minimum",         "$0 — only pay when calling"],
       ]}
     />
-    <Note kind="info">Agent GO currently runs with all endpoints <strong style={{ color: "#c8ff00" }}>free</strong>. The x402 middleware is preserved in the codebase for future monetization — flip <Code>PAYMENT_ENABLED=true</Code> to activate it.</Note>
+    <Note kind="info">Bountr currently runs with all endpoints <strong style={{ color: "#c8ff00" }}>free</strong>. The x402 middleware is preserved in the codebase for future monetization — flip <Code>PAYMENT_ENABLED=true</Code> to activate it.</Note>
   </>;
 }
 
@@ -537,7 +537,7 @@ USDC_MINT=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v
 services:
   db:
     image: postgres:15-alpine
-    environment: { POSTGRES_DB: agentgo }
+    environment: { POSTGRES_DB: bountr }
   api:
     build: apps/api
     env_file: .env

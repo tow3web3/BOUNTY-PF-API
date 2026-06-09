@@ -1,5 +1,5 @@
 import { createHash } from "crypto";
-import type { NormalizedBounty, BountyStatus } from "@agent-go/shared";
+import type { NormalizedBounty, BountyStatus } from "@bountr/shared";
 
 // Shape returned by livestream-api.pump.fun/bounties/v2/tasks
 interface LivestreamTask {

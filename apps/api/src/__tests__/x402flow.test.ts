@@ -50,8 +50,8 @@ function isPaywalled(method: string, path: string) {
   return null;
 }
 
-vi.mock("@agent-go/shared", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@agent-go/shared")>();
+vi.mock("@bountr/shared", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@bountr/shared")>();
   return { ...actual, createDb: vi.fn(() => fakeDb) };
 });
 

@@ -2,11 +2,11 @@
  * Full seed: fetch ALL bounties from pump.fun GO (all phases) and upsert into DB.
  * Run: DATABASE_URL=... npx tsx scripts/seed-bounties.ts
  */
-import { createDb, schema } from "@agent-go/shared";
+import { createDb, schema } from "@bountr/shared";
 import { eq } from "drizzle-orm";
 import { createHash } from "crypto";
 
-const DATABASE_URL = process.env.DATABASE_URL ?? "postgresql://gabrieldevarine@localhost:5432/agentgo";
+const DATABASE_URL = process.env.DATABASE_URL ?? "postgresql://gabrieldevarine@localhost:5432/bountr";
 const LIVESTREAM = "https://livestream-api.pump.fun";
 const HDR = {
   "Origin": "https://pump.fun",
@@ -85,7 +85,7 @@ function hashDesc(text: string) {
 
 async function main() {
   console.log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-  console.log("  Agent GO — Full Pump.fun GO Seed (all phases)");
+  console.log("  Bountr — Full Pump.fun GO Seed (all phases)");
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
 
   // ── 1. Fetch stats ──────────────────────────────────────────────────────────

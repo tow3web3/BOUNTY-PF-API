@@ -4,7 +4,7 @@ import path from "path";
 export default defineConfig({
   resolve: {
     alias: {
-      "@agent-go/shared": path.resolve(__dirname, "../../packages/shared/src/index.ts"),
+      "@bountr/shared": path.resolve(__dirname, "../../packages/shared/src/index.ts"),
     },
   },
   test: {

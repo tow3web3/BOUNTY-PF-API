@@ -1,10 +1,10 @@
 import { createHmac, randomBytes } from "crypto";
-import type { DB } from "@agent-go/shared";
+import type { DB } from "@bountr/shared";
 import {
   schema,
   type SubscriptionFilters,
   type BountyRow,
-} from "@agent-go/shared";
+} from "@bountr/shared";
 import { and, eq, gt, isNull, lte, or, sql } from "drizzle-orm";
 import { logger } from "../logger";
 
@@ -143,8 +143,8 @@ async function deliverWebhook(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Agent-Go-Signature": `sha256=${signature}`,
-        "X-Agent-Go-Attempt": String(attempt),
+        "X-Bountr-Signature": `sha256=${signature}`,
+        "X-Bountr-Attempt": String(attempt),
       },
       body,
       signal: AbortSignal.timeout(10_000),

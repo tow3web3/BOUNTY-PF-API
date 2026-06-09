@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { eq } from "drizzle-orm";
-import type { DB } from "@agent-go/shared";
-import { schema, LlmClassificationOutputSchema, type ClassificationResult } from "@agent-go/shared";
+import type { DB } from "@bountr/shared";
+import { schema, LlmClassificationOutputSchema, type ClassificationResult } from "@bountr/shared";
 import { config } from "../config";
 import { logger } from "../logger";
 

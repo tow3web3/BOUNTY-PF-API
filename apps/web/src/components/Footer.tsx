@@ -25,7 +25,7 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="max-w-[1400px] mx-auto px-8 py-3 flex items-center justify-between">
         <div className="flex items-center gap-6 text-[10px]" style={{ color: "#2a2a2a" }}>
-          <span>AGENT GO</span>
+          <span>BOUNTR</span>
           <span style={{ color: "#1a1a1a" }}>·</span>
           <span>x402 v2</span>
           <span style={{ color: "#1a1a1a" }}>·</span>

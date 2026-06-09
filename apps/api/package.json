@@ -1,5 +1,5 @@
 {
-  "name": "@agent-go/api",
+  "name": "@bountr/api",
   "version": "1.0.0",
   "private": true,
   "main": "./dist/index.js",
@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@agent-go/shared": "*",
+    "@bountr/shared": "*",
     "@anthropic-ai/sdk": "^0.32.0",
     "@hono/node-server": "^1.13.0",
     "@hono/zod-validator": "^0.4.3",

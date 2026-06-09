@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { desc, eq, and } from "drizzle-orm";
-import type { DB } from "@agent-go/shared";
-import { schema } from "@agent-go/shared";
+import type { DB } from "@bountr/shared";
+import { schema } from "@bountr/shared";
 
 export function createLandingRouter(db: DB) {
   const router = new Hono();
@@ -77,7 +77,7 @@ export function createLandingRouter(db: DB) {
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Agent GO — x402 Bounty API</title>
+  <title>Bountr — x402 Bounty API</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -464,7 +464,7 @@ curl -X POST http://localhost:4021/v1/subscriptions \
 </section>
 
 <footer>
-  <p>Agent GO · x402 v2 · Solana devnet · Built with Hono + Drizzle + @x402/hono</p>
+  <p>Bountr · x402 v2 · Solana devnet · Built with Hono + Drizzle + @x402/hono</p>
   <p style="margin-top:8px"><a href="https://x402.org" target="_blank">x402.org</a> · <a href="https://go.pump.fun" target="_blank">Pump.fun GO</a></p>
 </footer>
 

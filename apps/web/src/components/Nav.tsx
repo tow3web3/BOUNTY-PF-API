@@ -31,7 +31,7 @@ export default function Nav({ page = "home", onNavigate }: { page?: Page; onNavi
           onMouseEnter={e => (e.currentTarget.style.color = "#c8ff00")}
           onMouseLeave={e => (e.currentTarget.style.color = page === "home" ? "#c8ff00" : "#555")}
         >
-          <span className="text-[11px] font-bold tracking-widest">AGENT_GO</span>
+          <span className="text-[11px] font-bold tracking-widest">BOUNTR</span>
         </button>
 
         {/* Status */}

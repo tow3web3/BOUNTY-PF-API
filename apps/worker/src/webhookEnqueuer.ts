@@ -1,6 +1,6 @@
 import { and, eq, gt } from "drizzle-orm";
-import type { DB } from "@agent-go/shared";
-import { schema, type SubscriptionFilters } from "@agent-go/shared";
+import type { DB } from "@bountr/shared";
+import { schema, type SubscriptionFilters } from "@bountr/shared";
 import { logger } from "./logger";
 
 export async function enqueueWebhooksForNewBounties(

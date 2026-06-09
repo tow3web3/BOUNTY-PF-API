@@ -1,6 +1,6 @@
 import { logger } from "./logger";
 import { normalizeBounty } from "./normalizer";
-import type { NormalizedBounty } from "@agent-go/shared";
+import type { NormalizedBounty } from "@bountr/shared";
 
 // ── Official undocumented API (discovered via Playwright network intercept) ───
 const LIVESTREAM_API = "https://livestream-api.pump.fun";

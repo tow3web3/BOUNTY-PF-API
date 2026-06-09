@@ -1,7 +1,7 @@
 import { createHmac } from "crypto";
 import { and, eq, isNull, lte, or } from "drizzle-orm";
-import type { DB } from "@agent-go/shared";
-import { schema } from "@agent-go/shared";
+import type { DB } from "@bountr/shared";
+import { schema } from "@bountr/shared";
 import { logger } from "./logger";
 
 const MAX_ATTEMPTS = 3;
@@ -59,8 +59,8 @@ async function deliverWebhook(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Agent-Go-Signature": `sha256=${signature}`,
-        "X-Agent-Go-Attempt": String(attempt),
+        "X-Bountr-Signature": `sha256=${signature}`,
+        "X-Bountr-Attempt": String(attempt),
       },
       body,
       signal: AbortSignal.timeout(10_000),

@@ -1,4 +1,4 @@
-# Agent GO
+# Bountr
 
 A paywall API (x402 protocol, USDC on Solana) that lets AI agents discover and filter automatable bounties from [Pump.fun GO](https://go.pump.fun).
 
@@ -183,7 +183,7 @@ Create a 24-hour webhook subscription. You will be notified via POST to your `we
 
 **Verify incoming webhooks:**
 ```typescript
-const sig = req.headers["x-agent-go-signature"]; // "sha256=<hex>"
+const sig = req.headers["x-bountr-signature"]; // "sha256=<hex>"
 const expected = "sha256=" + createHmac("sha256", hmacSecret).update(rawBody).digest("hex");
 if (sig !== expected) throw new Error("Invalid signature");
 ```
