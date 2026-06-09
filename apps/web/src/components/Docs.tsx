@@ -135,7 +135,7 @@ function S00() {
     <KV rows={[
       ["Protocol",    "x402 v2 — HTTP 402 native micropayments", true],
       ["Chain",       "Solana mainnet · 5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp"],
-      ["AI Engine",   "claude-sonnet-4-6 — bounty classification"],
+      ["AI Engine",   "gpt-4o-mini — bounty classification"],
       ["DB",          "PostgreSQL 15 + Drizzle ORM"],
       ["API Server",  "Hono · port 4021"],
       ["Frontend",    "Vite + React 18 + Tailwind"],
@@ -302,7 +302,7 @@ app.use(paymentMiddleware(routes, resourceServer));
 function S05() {
   return <>
     <H>AI Classification</H>
-    <P>Every new bounty is classified by <Code>claude-sonnet-4-6</Code> via structured JSON output. Re-classification triggers only when the description hash changes.</P>
+    <P>Every new bounty is classified by <Code>gpt-4o-mini</Code> via structured JSON output. Re-classification triggers only when the description hash changes.</P>
     <Sub>Prompt</Sub>
     <Block lang="typescript">{`
 const system = \`You are an expert at classifying tasks for AI agents.
@@ -336,7 +336,7 @@ export function hashDescription(text: string): string {
 }
 // Worker: if hash changed → trigger re-classification
     `}</Block>
-    <Note kind="warn">Classification requires <Code>ANTHROPIC_API_KEY</Code> in <Code>.env</Code>. Without it the worker runs but skips the classify step — all bounties stay unclassified and the AUTOMATABLE tab shows 0.</Note>
+    <Note kind="warn">Classification requires <Code>OPENAI_API_KEY</Code> in <Code>.env</Code>. Without it the worker runs but skips the classify step — all bounties stay unclassified and the AUTOMATABLE tab shows 0.</Note>
   </>;
 }
 
@@ -379,7 +379,7 @@ for (const phase of PHASES) {
     <Block lang="sh">{`
 SCRAPER_DRY_RUN=false          # set to true to disable actual scraping
 SCRAPER_INTERVAL_SECONDS=60    # cron interval
-ANTHROPIC_API_KEY=sk-...       # required for classification
+OPENAI_API_KEY=sk-...       # required for classification
     `}</Block>
   </>;
 }
@@ -515,7 +515,7 @@ function S09() {
     <Block lang="sh">{`
 npm install
 cp .env.example .env
-# Fill in: DATABASE_URL, PAYMENT_ADDRESS, ANTHROPIC_API_KEY
+# Fill in: DATABASE_URL, PAYMENT_ADDRESS, OPENAI_API_KEY
 
 npm run db:migrate
 npm run dev                  # API + worker on :4021

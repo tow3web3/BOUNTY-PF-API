@@ -1,4 +1,4 @@
-import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 import { eq } from "drizzle-orm";
 import type { DB } from "@bountr/shared";
 import { schema, LlmClassificationOutputSchema, type ClassificationResult } from "@bountr/shared";
@@ -25,13 +25,13 @@ Effort estimates (for digital_automatable only, otherwise use "high"):
 - medium: 1–10 min AI processing
 - high: > 10 min AI processing or multi-step pipelines`;
 
-let anthropicClient: Anthropic | null = null;
+let openaiClient: OpenAI | null = null;
 
-function getClient(): Anthropic {
-  if (!anthropicClient) {
-    anthropicClient = new Anthropic({ apiKey: config.ANTHROPIC_API_KEY });
+function getClient(): OpenAI {
+  if (!openaiClient) {
+    openaiClient = new OpenAI({ apiKey: config.OPENAI_API_KEY });
   }
-  return anthropicClient;
+  return openaiClient;
 }
 
 export async function classifyBounty(
@@ -41,7 +41,6 @@ export async function classifyBounty(
   description: string,
   descriptionHash: string,
 ): Promise<ClassificationResult> {
-  // Check cache: only re-classify if description changed
   const existing = await db.query.bountyClassifications.findFirst({
     where: eq(schema.bountyClassifications.bountyId, bountyId),
   });
@@ -86,20 +85,16 @@ export async function classifyBounty(
 export async function callLlm(title: string, description: string): Promise<ClassificationResult> {
   const client = getClient();
 
-  const message = await client.messages.create({
-    model: "claude-sonnet-4-6",
+  const response = await client.chat.completions.create({
+    model: "gpt-4o-mini",
     max_tokens: 256,
-    system: CLASSIFICATION_SYSTEM_PROMPT,
     messages: [
-      {
-        role: "user",
-        content: `Title: ${title}\n\nDescription: ${description}`,
-      },
+      { role: "system", content: CLASSIFICATION_SYSTEM_PROMPT },
+      { role: "user", content: `Title: ${title}\n\nDescription: ${description}` },
     ],
   });
 
-  const rawText =
-    message.content[0]?.type === "text" ? message.content[0].text.trim() : "";
+  const rawText = response.choices[0]?.message?.content?.trim() ?? "";
 
   const parsed = LlmClassificationOutputSchema.safeParse(JSON.parse(rawText));
   if (!parsed.success) {

@@ -389,7 +389,7 @@ export default function BountiesPage({ onBack }: { onBack?: () => void }) {
             source: livestream-api.pump.fun · synced via worker every 60s
           </span>
           <span className="text-[10px]" style={{ color: "#1e1e1e" }}>
-            AI: claude-sonnet-4-6 · digital_automatable classification
+            AI: gpt-4o-mini · digital_automatable classification
           </span>
         </div>
       </div>

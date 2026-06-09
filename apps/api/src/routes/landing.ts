@@ -423,7 +423,7 @@ HTTP/1.1 <span class="number">200</span> OK
   <h2>Live Bounties</h2>
   <p class="section-sub">
     Fetched directly from the database.
-    <span style="color:var(--accent)">🤖 Automatable</span> = verified by AI classification (claude-sonnet-4-6).
+    <span style="color:var(--accent)">🤖 Automatable</span> = verified by AI classification (gpt-4o-mini).
   </p>
   <div class="grid">
     ${bountyCards || `

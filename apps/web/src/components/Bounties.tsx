@@ -270,7 +270,7 @@ export default function Bounties() {
             source: livestream-api.pump.fun · worker sync every 60s
           </span>
           <span className="text-[10px]" style={{ color: "#2a2a2a" }}>
-            AI classification: claude-sonnet-4-6 · digital_automatable
+            AI classification: gpt-4o-mini · digital_automatable
           </span>
         </div>
       </div>

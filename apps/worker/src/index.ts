@@ -12,7 +12,7 @@ import { z } from "zod";
 // ── Config ────────────────────────────────────────────────────────────────────
 const EnvSchema = z.object({
   DATABASE_URL: z.string().url(),
-  ANTHROPIC_API_KEY: z.string().min(1),
+  OPENAI_API_KEY: z.string().min(1),
   SCRAPER_DRY_RUN: z
     .string()
     .optional()
@@ -135,7 +135,7 @@ async function runScrapeJob(): Promise<void> {
 
 // ── Classify job ──────────────────────────────────────────────────────────────
 async function runClassifyJob(): Promise<void> {
-  await classifyNewBounties(db, env.ANTHROPIC_API_KEY).catch((err) =>
+  await classifyNewBounties(db, env.OPENAI_API_KEY).catch((err) =>
     logger.error({ err }, "Classify job failed"),
   );
 }

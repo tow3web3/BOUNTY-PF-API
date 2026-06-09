@@ -1,12 +1,8 @@
-import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 import { eq } from "drizzle-orm";
 import type { DB } from "@bountr/shared";
 import { schema, LlmClassificationOutputSchema, type ClassificationResult } from "@bountr/shared";
 import { logger } from "./logger";
-
-// Re-uses the same classification logic as the API service.
-// The worker classifies all new bounties in the background so
-// /v1/bounties/automatable is always pre-populated.
 
 const CLASSIFICATION_SYSTEM_PROMPT = `You are a bounty classification system. Given a bounty title and description, output ONLY a valid JSON object — no markdown fences, no explanation, just raw JSON.
 
@@ -28,15 +24,14 @@ Effort estimates (for digital_automatable; otherwise use "high"):
 - medium: 1–10 min AI processing
 - high: > 10 min or multi-step pipeline`;
 
-let client: Anthropic | null = null;
+let client: OpenAI | null = null;
 
-function getClient(apiKey: string): Anthropic {
-  if (!client) client = new Anthropic({ apiKey });
+function getClient(apiKey: string): OpenAI {
+  if (!client) client = new OpenAI({ apiKey });
   return client;
 }
 
-export async function classifyNewBounties(db: DB, anthropicApiKey: string): Promise<void> {
-  // Find bounties that have no classification or whose description changed
+export async function classifyNewBounties(db: DB, openaiApiKey: string): Promise<void> {
   const unclassified = await db
     .select({ bounty: schema.bounties, cls: schema.bountyClassifications })
     .from(schema.bounties)
@@ -45,7 +40,7 @@ export async function classifyNewBounties(db: DB, anthropicApiKey: string): Prom
       eq(schema.bounties.id, schema.bountyClassifications.bountyId),
     )
     .where(eq(schema.bounties.status, "active"))
-    .limit(20); // Process in batches
+    .limit(20);
 
   const toClassify = unclassified.filter(
     ({ bounty, cls }) =>
@@ -58,7 +53,7 @@ export async function classifyNewBounties(db: DB, anthropicApiKey: string): Prom
 
   for (const { bounty } of toClassify) {
     try {
-      await classifyOne(db, anthropicApiKey, bounty);
+      await classifyOne(db, openaiApiKey, bounty);
     } catch (err) {
       logger.error({ err, bountyId: bounty.id }, "Classification failed — skipping");
     }
@@ -67,25 +62,21 @@ export async function classifyNewBounties(db: DB, anthropicApiKey: string): Prom
 
 async function classifyOne(
   db: DB,
-  anthropicApiKey: string,
+  openaiApiKey: string,
   bounty: typeof schema.bounties.$inferSelect,
 ): Promise<ClassificationResult> {
-  const llm = getClient(anthropicApiKey);
+  const llm = getClient(openaiApiKey);
 
-  const message = await llm.messages.create({
-    model: "claude-sonnet-4-6",
+  const response = await llm.chat.completions.create({
+    model: "gpt-4o-mini",
     max_tokens: 256,
-    system: CLASSIFICATION_SYSTEM_PROMPT,
     messages: [
-      {
-        role: "user",
-        content: `Title: ${bounty.title}\n\nDescription: ${bounty.description}`,
-      },
+      { role: "system", content: CLASSIFICATION_SYSTEM_PROMPT },
+      { role: "user", content: `Title: ${bounty.title}\n\nDescription: ${bounty.description}` },
     ],
   });
 
-  const rawText =
-    message.content[0]?.type === "text" ? message.content[0].text.trim() : "";
+  const rawText = response.choices[0]?.message?.content?.trim() ?? "";
 
   const parsed = LlmClassificationOutputSchema.safeParse(JSON.parse(rawText));
   if (!parsed.success) {
