@@ -1,5 +1,4 @@
-import { useRef, useState, useEffect } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
 
 interface Bounty {
   id: string;
@@ -20,226 +19,259 @@ interface AutomatableBounty extends Bounty {
   };
 }
 
-const EFFORT_COLOR: Record<string, string> = {
-  low: "text-green border-green/30 bg-green/10",
-  medium: "text-yellow border-yellow/30 bg-yellow/10",
-  high: "text-red-400 border-red-400/30 bg-red-400/10",
+const EFFORT_BADGE: Record<string, { color: string; label: string }> = {
+  low:    { color: "#00ff88", label: "LOW" },
+  medium: { color: "#fbbf24", label: "MED" },
+  high:   { color: "#ff5555", label: "HIGH" },
 };
 
-function BountyCard({ bounty, index, auto }: { bounty: Bounty; index: number; auto?: AutomatableBounty }) {
-  const reward = parseFloat(bounty.rewardUsd);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.07, duration: 0.5, ease: "easeOut" }}
-      whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      className={`group relative rounded-xl border p-5 transition-all duration-200 cursor-default ${
-        auto
-          ? "border-purple/30 bg-gradient-to-b from-purple/5 to-transparent hover:border-purple/50"
-          : "border-border-bright bg-surface-2 hover:border-border-bright/80"
-      }`}
-    >
-      {auto && (
-        <div className="absolute top-0 right-0 w-24 h-24 bg-purple/5 rounded-full blur-2xl pointer-events-none" />
-      )}
-
-      {/* Header */}
-      <div className="flex items-start justify-between gap-3 mb-3">
-        <div className="flex items-center gap-2 flex-wrap">
-          {auto && (
-            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-purple/15 text-purple border border-purple/30">
-              🤖 Automatable
-            </span>
-          )}
-          {auto && (
-            <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border font-mono ${EFFORT_COLOR[auto.classification.effortEstimate] ?? "text-slate-400"}`}>
-              {auto.classification.effortEstimate} effort
-            </span>
-          )}
-          {!auto && (
-            <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-border">
-              👤 Human / Physical
-            </span>
-          )}
-        </div>
-        <div className="shrink-0 text-right">
-          <span className="text-2xl font-black text-green">${Math.round(reward)}</span>
-          {auto && (
-            <div className="text-[10px] text-slate-600 font-mono">
-              ratio {auto.classification.rewardToEffortRatio.toFixed(1)}
-            </div>
-          )}
-        </div>
-      </div>
-
-      <h3 className="text-sm font-semibold text-white mb-2 leading-snug line-clamp-2">
-        {bounty.title}
-      </h3>
-
-      <p className="text-xs text-slate-500 leading-relaxed mb-3 line-clamp-2">
-        {bounty.description}
-      </p>
-
-      {auto?.classification.reasoning && (
-        <p className="text-[11px] text-purple/70 italic border-l-2 border-purple/30 pl-2 mb-3 line-clamp-2">
-          {auto.classification.reasoning}
-        </p>
-      )}
-
-      <div className="flex items-center justify-between mt-auto pt-2 border-t border-border/50">
-        {auto && (
-          <span className="text-[11px] text-slate-600 font-mono">
-            {Math.round(auto.classification.confidence * 100)}% confidence
-          </span>
-        )}
-        {bounty.link && (
-          <a
-            href={bounty.link}
-            target="_blank"
-            rel="noreferrer"
-            className="text-[11px] text-cyan hover:text-cyan/80 transition-colors ml-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            pump.fun →
-          </a>
-        )}
-      </div>
-    </motion.div>
-  );
-}
-
 export default function Bounties() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
   const [bounties, setBounties] = useState<Bounty[]>([]);
   const [automatable, setAutomatable] = useState<AutomatableBounty[]>([]);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<"all" | "auto">("auto");
+  const [error, setError] = useState<string | null>(null);
+  const [tab, setTab] = useState<"auto" | "all">("auto");
+  const [expanded, setExpanded] = useState<string | null>(null);
+  const [countdown, setCountdown] = useState(30);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const load = () => {
+    setCountdown(30);
+    Promise.all([
+      fetch("/api/v1/bounties?limit=50").then(r => r.json()),
+      fetch("/api/v1/bounties/automatable?limit=50").then(r => r.json()),
+    ])
+      .then(([allData, autoData]) => {
+        setBounties((allData as { data?: Bounty[] }).data ?? []);
+        setAutomatable((autoData as { data?: AutomatableBounty[] }).data ?? []);
+        setLoading(false);
+        setError(null);
+      })
+      .catch((e) => {
+        setError(String(e));
+        setLoading(false);
+      });
+  };
 
   useEffect(() => {
-    fetch("/api/v1/health")
-      .then((r) => r.json())
-      .then((data) => {
-        const allBounties = (data as { bounties?: Bounty[] }).bounties ?? [];
-        setBounties(allBounties);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+    load();
+    intervalRef.current = setInterval(load, 30000);
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, []);
+
+  // Countdown ticker
+  useEffect(() => {
+    const t = setInterval(() => setCountdown((c) => (c <= 1 ? 30 : c - 1)), 1000);
+    return () => clearInterval(t);
   }, []);
 
   const displayed = tab === "auto" ? automatable : bounties;
-  const isEmpty = !loading && displayed.length === 0;
 
   return (
-    <section id="bounties" className="py-32 relative">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple/3 to-transparent pointer-events-none" />
+    <section id="bounties" style={{ background: "#060606", borderTop: "1px solid #1a1a1a" }}>
+      <div className="max-w-[1400px] mx-auto">
 
-      <div className="relative max-w-7xl mx-auto px-6">
-        {/* Header */}
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12"
-        >
-          <div>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-dim border border-green/20 text-green text-xs font-semibold mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-green animate-pulse" />
-              Live data — refreshes every 30s
-            </div>
-            <h2 className="text-4xl lg:text-5xl font-black tracking-tight">
-              <span className="text-gradient">Bounties</span>
-            </h2>
-            <p className="text-slate-400 mt-2">
-              Fetched directly from the database.{" "}
-              <span className="text-purple">🤖 Automatable</span> = AI-verified.
-            </p>
+        {/* Section header */}
+        <div className="flex items-center justify-between px-8 py-4 border-b border-[#1a1a1a]">
+          <div className="flex items-center gap-4">
+            <span className="text-[10px] tracking-widest" style={{ color: "#2e2e2e" }}>04</span>
+            <span className="text-[11px] tracking-widest font-bold" style={{ color: "#e8e8e8" }}>
+              LIVE BOUNTIES
+            </span>
+            {!loading && (
+              <span className="text-[10px]" style={{ color: "#2e2e2e" }}>
+                {displayed.length} {tab === "auto" ? "automatable" : "total"}
+              </span>
+            )}
           </div>
+          <div className="flex items-center gap-4">
+            <span className="text-[10px]" style={{ color: "#222" }}>
+              refresh in {countdown}s
+            </span>
+            {/* Tabs */}
+            <div className="flex border border-[#1a1a1a]">
+              {(["auto", "all"] as const).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setTab(t)}
+                  className="px-4 py-1.5 text-[10px] tracking-widest transition-colors duration-100"
+                  style={{
+                    background: tab === t ? "#c8ff00" : "transparent",
+                    color: tab === t ? "#060606" : "#333",
+                    borderRight: t === "auto" ? "1px solid #1a1a1a" : "none",
+                    fontWeight: tab === t ? "bold" : "normal",
+                  }}
+                >
+                  {t === "auto" ? "AUTOMATABLE" : "ALL"}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
 
-          {/* Tabs */}
-          <div className="flex items-center gap-2 p-1 rounded-xl bg-surface border border-border">
-            {(["auto", "all"] as const).map((t) => (
-              <button
-                key={t}
-                onClick={() => setTab(t)}
-                className={`relative px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
-                  tab === t ? "text-white" : "text-slate-500 hover:text-slate-300"
-                }`}
-              >
-                {tab === t && (
-                  <motion.div
-                    layoutId="tab-bg"
-                    className="absolute inset-0 bg-purple/20 border border-purple/30 rounded-lg"
-                  />
-                )}
-                <span className="relative">
-                  {t === "auto" ? "🤖 Automatable" : "All bounties"}
-                </span>
-              </button>
+        {/* Column headers — only shown when there's data */}
+        {!loading && displayed.length > 0 && (
+          <div
+            className="hidden md:flex items-center px-8 py-2 border-b border-[#111] text-[10px] tracking-widest"
+            style={{ color: "#2a2a2a", background: "#040404" }}
+          >
+            <div className="w-8 shrink-0">#</div>
+            <div className="flex-1 min-w-0">TITLE</div>
+            <div className="w-28 shrink-0 text-right">REWARD</div>
+            {tab === "auto" && <div className="w-16 shrink-0 text-right">EFFORT</div>}
+            {tab === "auto" && <div className="w-20 shrink-0 text-right">CONF.</div>}
+            <div className="w-16 shrink-0 text-right">LINK</div>
+          </div>
+        )}
+
+        {/* Loading skeletons */}
+        {loading && (
+          <div className="px-8 py-4">
+            {[...Array(4)].map((_, i) => (
+              <div
+                key={i}
+                className="h-10 mb-1 border border-[#0f0f0f]"
+                style={{
+                  background: "#0a0a0a",
+                  opacity: 1 - i * 0.2,
+                }}
+              />
             ))}
           </div>
-        </motion.div>
+        )}
 
-        {/* Grid */}
-        <AnimatePresence mode="wait">
-          {loading ? (
-            <motion.div
-              key="loading"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-            >
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="rounded-xl border border-border bg-surface-2 p-5 h-48 animate-pulse" />
-              ))}
-            </motion.div>
-          ) : isEmpty ? (
-            <motion.div
-              key="empty"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="flex flex-col items-center justify-center py-24 text-center"
-            >
-              <motion.div
-                animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-                className="text-5xl mb-5"
-              >
-                🔍
-              </motion.div>
-              <p className="text-lg font-semibold text-slate-300 mb-2">No active bounties yet</p>
-              <p className="text-sm text-slate-500 max-w-sm leading-relaxed">
-                The worker syncs Pump.fun GO bounties automatically.
-                <br />Check back in a few minutes.
-              </p>
-              <div className="mt-6 flex items-center gap-2 text-xs text-slate-600">
-                <span className="w-1.5 h-1.5 rounded-full bg-slate-600 animate-pulse" />
-                Worker syncing every 60s
+        {/* Error state */}
+        {!loading && error && (
+          <div className="px-8 py-8 text-[11px]" style={{ color: "#ff5555" }}>
+            <span style={{ color: "#333" }}>error: </span>{error}
+            <div className="mt-2 text-[10px]" style={{ color: "#2e2e2e" }}>
+              — make sure the API server is running on :4021
+            </div>
+          </div>
+        )}
+
+        {/* Empty state */}
+        {!loading && !error && displayed.length === 0 && (
+          <div className="px-8 py-12" style={{ background: "#040404" }}>
+            <div className="text-[11px] leading-7" style={{ color: "#2e2e2e" }}>
+              <div>&gt; fetching from livestream-api.pump.fun...</div>
+              <div>&gt; database: {bounties.length} total · {automatable.length} automatable</div>
+              <div style={{ color: "#1e1e1e" }}>
+                &gt; worker syncs every 60s — refresh in {countdown}s
               </div>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="grid"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-            >
-              {tab === "auto"
-                ? automatable.map((b, i) => (
-                    <BountyCard key={b.id} bounty={b} index={i} auto={b} />
-                  ))
-                : bounties.map((b, i) => {
-                    const a = automatable.find((x) => x.id === b.id);
-                    return <BountyCard key={b.id} bounty={b} index={i} auto={a} />;
-                  })}
-            </motion.div>
-          )}
-        </AnimatePresence>
+            </div>
+            <span
+              className="cursor-blink inline-block w-[7px] h-[13px] align-middle mt-1"
+              style={{ background: "#2e2e2e" }}
+            />
+          </div>
+        )}
+
+        {/* Data rows */}
+        {!loading && !error && displayed.length > 0 && (
+          <div>
+            {displayed.map((bounty, i) => {
+              const auto = tab === "auto" ? (bounty as AutomatableBounty) : null;
+              const reward = parseFloat(bounty.rewardUsd);
+              const isOpen = expanded === bounty.id;
+
+              return (
+                <div key={bounty.id} style={{ borderBottom: "1px solid #0d0d0d" }}>
+                  <button
+                    className="w-full flex items-center px-8 py-3 text-left transition-colors duration-100"
+                    style={{ background: isOpen ? "#0c0c0c" : i % 2 === 0 ? "#060606" : "#080808" }}
+                    onMouseEnter={e => { if (!isOpen) e.currentTarget.style.background = "#0a0a0a"; }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.background = isOpen ? "#0c0c0c" : i % 2 === 0 ? "#060606" : "#080808";
+                    }}
+                    onClick={() => setExpanded(isOpen ? null : bounty.id)}
+                  >
+                    <div className="w-8 shrink-0 text-[10px]" style={{ color: "#2a2a2a" }}>
+                      {String(i + 1).padStart(2, "0")}
+                    </div>
+                    <div className="flex-1 min-w-0 pr-4 text-[12px] truncate" style={{ color: isOpen ? "#e8e8e8" : "#c8c8c8" }}>
+                      {bounty.title}
+                    </div>
+                    <div className="w-28 shrink-0 text-right text-[12px] font-bold" style={{ color: "#c8ff00" }}>
+                      ${isNaN(reward) ? "?" : Math.round(reward)}
+                    </div>
+                    {tab === "auto" && auto && (
+                      <div className="w-16 shrink-0 text-right">
+                        <span
+                          className="text-[10px] px-1.5 py-0.5 font-bold"
+                          style={{
+                            color: EFFORT_BADGE[auto.classification.effortEstimate]?.color ?? "#555",
+                            border: `1px solid ${EFFORT_BADGE[auto.classification.effortEstimate]?.color ?? "#555"}30`,
+                          }}
+                        >
+                          {EFFORT_BADGE[auto.classification.effortEstimate]?.label ?? "?"}
+                        </span>
+                      </div>
+                    )}
+                    {tab === "auto" && auto && (
+                      <div className="w-20 shrink-0 text-right text-[11px]" style={{ color: "#444" }}>
+                        {Math.round(auto.classification.confidence * 100)}%
+                      </div>
+                    )}
+                    <div className="w-16 shrink-0 text-right">
+                      {bounty.link ? (
+                        <a
+                          href={bounty.link}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-[10px] tracking-widest transition-colors duration-100"
+                          style={{ color: "#2e2e2e" }}
+                          onMouseEnter={e => (e.currentTarget.style.color = "#c8ff00")}
+                          onMouseLeave={e => (e.currentTarget.style.color = "#2e2e2e")}
+                          onClick={e => e.stopPropagation()}
+                        >
+                          → GO
+                        </a>
+                      ) : (
+                        <span style={{ color: "#1a1a1a" }}>—</span>
+                      )}
+                    </div>
+                  </button>
+
+                  {isOpen && (
+                    <div className="px-8 py-4 border-t border-[#111]" style={{ background: "#0a0a0a" }}>
+                      {bounty.description ? (
+                        <p className="text-[11px] leading-6 mb-3" style={{ color: "#555" }}>
+                          {bounty.description}
+                        </p>
+                      ) : (
+                        <p className="text-[11px]" style={{ color: "#2e2e2e" }}>— no description —</p>
+                      )}
+                      {auto?.classification.reasoning && (
+                        <div
+                          className="mt-2 pl-3 text-[11px] leading-5 border-l-2"
+                          style={{ color: "#555", borderColor: "#c8ff0030" }}
+                        >
+                          <span className="text-[10px] tracking-widest" style={{ color: "#2e2e2e" }}>
+                            AI:{" "}
+                          </span>
+                          {auto.classification.reasoning}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        <div
+          className="px-8 py-3 flex items-center justify-between border-t border-[#1a1a1a]"
+          style={{ background: "#040404" }}
+        >
+          <span className="text-[10px]" style={{ color: "#2a2a2a" }}>
+            source: livestream-api.pump.fun · worker sync every 60s
+          </span>
+          <span className="text-[10px]" style={{ color: "#2a2a2a" }}>
+            AI classification: claude-sonnet-4-6 · digital_automatable
+          </span>
+        </div>
       </div>
     </section>
   );

@@ -1,41 +1,39 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
 import HowItWorks from "./components/HowItWorks";
 import Endpoints from "./components/Endpoints";
-import Bounties from "./components/Bounties";
+import Tokenomics from "./components/Tokenomics";
 import Footer from "./components/Footer";
 import Docs from "./components/Docs";
+import BountiesPage from "./components/BountiesPage";
 
-type Page = "home" | "docs";
-
-function getPage(): Page {
-  return window.location.hash === "#docs" ? "docs" : "home";
-}
+export type Page = "home" | "docs" | "bounties";
 
 export default function App() {
-  const [page, setPage] = useState<Page>(getPage);
-
-  useEffect(() => {
-    const fn = () => setPage(getPage());
-    window.addEventListener("hashchange", fn);
-    return () => window.removeEventListener("hashchange", fn);
-  }, []);
+  const [page, setPage] = useState<Page>("home");
 
   return (
-    <div className="bg-bg text-slate-100 min-h-screen overflow-x-hidden">
-      <Nav page={page} />
-      {page === "docs" ? (
-        <Docs />
-      ) : (
+    <div style={{ background: "#060606", minHeight: "100vh", overflowX: "hidden" }}>
+      <Nav page={page} onNavigate={setPage} />
+
+      {page === "docs" && (
+        <Docs onBack={() => setPage("home")} />
+      )}
+
+      {page === "bounties" && (
+        <BountiesPage onBack={() => setPage("home")} />
+      )}
+
+      {page === "home" && (
         <>
-          <Hero />
+          <Hero onNavigate={setPage} />
           <HowItWorks />
           <Endpoints />
-          <Bounties />
+          <Tokenomics />
+          <Footer />
         </>
       )}
-      <Footer />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, gt, sql } from "drizzle-orm";
 import { z } from "zod";
 import type { DB } from "@agent-go/shared";
 import {
@@ -27,20 +27,24 @@ export function createBountiesRouter(db: DB) {
       const { page, limit, status } = c.req.valid("query");
       const offset = (page - 1) * limit;
 
-      const conditions = status ? [eq(schema.bounties.status, status)] : [];
+      // Always filter $0 bounties; default to active if no status specified
+      const statusFilter = status
+        ? eq(schema.bounties.status, status)
+        : eq(schema.bounties.status, "active");
+      const conditions = [statusFilter, gt(schema.bounties.rewardUsd, "0")];
 
       const [rows, countRows] = await Promise.all([
         db
           .select()
           .from(schema.bounties)
-          .where(conditions.length ? and(...conditions) : undefined)
-          .orderBy(desc(schema.bounties.createdAt))
+          .where(and(...conditions))
+          .orderBy(desc(sql`cast(${schema.bounties.rewardUsd} as numeric)`))
           .limit(limit)
           .offset(offset),
         db
           .select({ count: schema.bounties.id })
           .from(schema.bounties)
-          .where(conditions.length ? and(...conditions) : undefined),
+          .where(and(...conditions)),
       ]);
 
       const total = countRows.length;

@@ -1,74 +1,57 @@
-import { motion } from "framer-motion";
-
 export default function Footer() {
   return (
-    <footer className="border-t border-border py-16">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid lg:grid-cols-3 gap-12 mb-12">
-          {/* Brand */}
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple to-cyan flex items-center justify-center text-sm font-black text-white">
-                G
-              </div>
-              <span className="font-bold text-lg tracking-tight">
-                Agent<span className="text-gradient">GO</span>
-              </span>
-            </div>
-            <p className="text-sm text-slate-500 leading-relaxed">
-              x402-powered API for AI agents to discover and execute
-              automatable bounties from Pump.fun GO.
-            </p>
-          </div>
-
-          {/* Links */}
-          <div>
-            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">API</h4>
-            <div className="flex flex-col gap-3">
-              {[
-                { href: "/api/v1/health", label: "Health Check" },
-                { href: "#endpoints", label: "Endpoints" },
-                { href: "#how-it-works", label: "x402 Protocol" },
-              ].map((l) => (
-                <a key={l.label} href={l.href} className="text-sm text-slate-500 hover:text-white transition-colors">
-                  {l.label}
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Stack */}
-          <div>
-            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Built with</h4>
-            <div className="flex flex-wrap gap-2">
-              {["Hono", "@x402/hono", "Drizzle ORM", "claude-sonnet-4-6", "Vite + React"].map((t) => (
-                <span key={t} className="text-xs px-2 py-1 rounded-md bg-surface border border-border text-slate-500 font-mono">
-                  {t}
-                </span>
-              ))}
-            </div>
-          </div>
+    <footer style={{ borderTop: "1px solid #1a1a1a", background: "#040404" }}>
+      {/* Stack bar */}
+      <div
+        className="max-w-[1400px] mx-auto px-8 py-3 flex items-center justify-between border-b border-[#111]"
+      >
+        <div className="flex items-center gap-4 text-[10px] tracking-widest" style={{ color: "#2a2a2a" }}>
+          <span>BUILT WITH</span>
+          {["Hono", "@x402/hono", "Drizzle ORM", "claude-sonnet-4-6", "Vite + React"].map((t) => (
+            <span
+              key={t}
+              className="px-2 py-0.5 border border-[#1a1a1a] text-[10px]"
+              style={{ color: "#333" }}
+            >
+              {t}
+            </span>
+          ))}
         </div>
+        <span className="text-[10px]" style={{ color: "#1e1e1e" }}>
+          thx alex for shipping fast & fixing the last shit
+        </span>
+      </div>
 
-        {/* Thanks */}
-        <div className="border-t border-border pt-8 mb-6">
-          <p className="text-xs text-slate-600 italic">
-            Special thanks to <span className="text-slate-400 not-italic font-semibold">Alex</span> for helping ship this fast and fix the last bits of bullshit. 🤝
-          </p>
+      {/* Bottom bar */}
+      <div className="max-w-[1400px] mx-auto px-8 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-6 text-[10px]" style={{ color: "#2a2a2a" }}>
+          <span>AGENT GO</span>
+          <span style={{ color: "#1a1a1a" }}>·</span>
+          <span>x402 v2</span>
+          <span style={{ color: "#1a1a1a" }}>·</span>
+          <span>solana devnet</span>
+          <span style={{ color: "#1a1a1a" }}>·</span>
+          <span>2026</span>
         </div>
-
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-slate-600">
-            Agent GO · Built with x402 v2 · Solana devnet
-          </p>
-          <div className="flex items-center gap-4 text-xs text-slate-600">
-            <a href="https://x402.org" target="_blank" rel="noreferrer" className="hover:text-slate-400 transition-colors">
-              x402.org
+        <div className="flex items-center gap-5 text-[10px]">
+          {[
+            { label: "x402.org",                href: "https://x402.org" },
+            { label: "pump.fun/go",             href: "https://pump.fun/go" },
+            { label: "github.com/tow3web3/x402", href: "https://github.com/tow3web3/x402" },
+          ].map((l) => (
+            <a
+              key={l.label}
+              href={l.href}
+              target="_blank"
+              rel="noreferrer"
+              className="transition-colors duration-100"
+              style={{ color: "#2a2a2a" }}
+              onMouseEnter={e => (e.currentTarget.style.color = "#c8ff00")}
+              onMouseLeave={e => (e.currentTarget.style.color = "#2a2a2a")}
+            >
+              {l.label}
             </a>
-            <a href="https://go.pump.fun" target="_blank" rel="noreferrer" className="hover:text-slate-400 transition-colors">
-              Pump.fun GO
-            </a>
-          </div>
+          ))}
         </div>
       </div>
     </footer>
