@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { createHash } from "node:crypto";
 import OpenAI from "openai";
 import type { DB } from "@bountr/shared";
@@ -193,11 +193,21 @@ const SYNC_INTERVAL_MS = 60_000;
 
 export function triggerBackgroundSync(db: DB, openaiApiKey: string): void {
   const now = Date.now();
+  // In-memory guard: skip if this instance scraped recently
   if (now - lastSyncAt < SYNC_INTERVAL_MS) return;
   lastSyncAt = now;
-  scrape()
-    .then((bounties) => upsertBounties(db, bounties))
-    .then(() => classifyPending(db, openaiApiKey, 10))
+
+  // DB guard: skip if another instance already scraped recently
+  db.select({ updatedAt: schema.bounties.updatedAt })
+    .from(schema.bounties)
+    .orderBy(desc(schema.bounties.updatedAt))
+    .limit(1)
+    .then(([row]) => {
+      if (row && Date.now() - row.updatedAt.getTime() < SYNC_INTERVAL_MS) return;
+      return scrape()
+        .then((bounties) => upsertBounties(db, bounties))
+        .then(() => classifyPending(db, openaiApiKey, 5));
+    })
     .catch(() => { /* best-effort */ });
 }
 
