@@ -121,26 +121,26 @@ export default function Hero({ onNavigate }: { onNavigate?: NavigateFn }) {
 
           {/* CTAs */}
           <div className="flex flex-wrap gap-3">
-            <button
-              onClick={() => onNavigate?.("bounties")}
+            <a
+              href="#how-it-works"
               className="px-5 py-2.5 text-[11px] tracking-widest font-bold border transition-all duration-100 hover:bg-[#c8ff00] hover:text-[#060606]"
               style={{ borderColor: "#c8ff00", color: "#c8ff00" }}
+            >
+              → PROTOCOL
+            </a>
+            <button
+              onClick={() => onNavigate?.("bounties")}
+              className="px-5 py-2.5 text-[11px] tracking-widest border transition-all duration-100 hover:border-[#c8ff0060] hover:text-[#888]"
+              style={{ borderColor: "#1e1e1e", color: "#444" }}
             >
               → VIEW BOUNTIES
             </button>
             <a
               href="#earn"
-              className="px-5 py-2.5 text-[11px] tracking-widest border transition-all duration-100 hover:border-[#c8ff0060] hover:text-[#888]"
-              style={{ borderColor: "#1e1e1e", color: "#444" }}
-            >
-              → EARN FEES
-            </a>
-            <a
-              href="#endpoints"
               className="px-5 py-2.5 text-[11px] tracking-widest border transition-all duration-100 hover:border-[#333] hover:text-[#888]"
               style={{ borderColor: "#1e1e1e", color: "#333" }}
             >
-              → API DOCS
+              → EARN FEES
             </a>
           </div>
         </div>

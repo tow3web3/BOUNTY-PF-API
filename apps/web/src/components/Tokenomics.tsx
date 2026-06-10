@@ -51,22 +51,25 @@ export default function Tokenomics() {
     : `curl http://localhost:4021/v1/bounties \\\n  -H "X-WALLET: <YOUR_SOLANA_WALLET>"`;
 
   return (
-    <section id="earn" style={{ background: "#060606", borderTop: "1px solid #1a1a1a" }}>
+    <section id="earn" style={{ background: "#030a04", borderTop: "2px solid #c8ff00" }}>
       <div className="max-w-[1400px] mx-auto">
 
         {/* Section header */}
-        <div className="flex items-center justify-between px-8 py-4 border-b border-[#1a1a1a]">
+        <div
+          className="flex items-center justify-between px-8 py-4 border-b"
+          style={{ borderColor: "#c8ff0020", background: "rgba(200,255,0,0.03)" }}
+        >
           <div className="flex items-center gap-4">
-            <span className="text-[10px] tracking-widest" style={{ color: "#2e2e2e" }}>05</span>
-            <span className="text-[11px] tracking-widest font-bold" style={{ color: "#e8e8e8" }}>EARN FEES</span>
+            <span className="text-[10px] tracking-widest" style={{ color: "#4a6020" }}>05</span>
+            <span className="text-[11px] tracking-widest font-bold" style={{ color: "#c8ff00" }}>EARN FEES</span>
             <span
               className="text-[9px] tracking-widest px-2 py-0.5"
-              style={{ color: "#c8ff00", border: "1px solid #c8ff0030" }}
+              style={{ color: "#c8ff00", border: "1px solid #c8ff0040", background: "rgba(200,255,0,0.06)" }}
             >
               TOKEN LAUNCHING
             </span>
           </div>
-          <span className="text-[10px]" style={{ color: "#2e2e2e" }}>
+          <span className="text-[10px]" style={{ color: "#4a6020" }}>
             pump.fun GO · Solana · USDC distribution
           </span>
         </div>
