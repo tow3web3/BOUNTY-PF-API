@@ -35,7 +35,7 @@ app.use("/v1/*", async (c, next) => {
 
 app.route("/", createLandingRouter(db));
 app.route("/v1/health", createHealthRouter(db));
-app.route("/v1/bounties", createBountiesRouter(db));
+app.route("/v1/bounties", createBountiesRouter(db, config.OPENAI_API_KEY));
 app.route("/v1/subscriptions", createSubscriptionsRouter(db));
 app.route("/cron", createCronRouter(db, config));
 

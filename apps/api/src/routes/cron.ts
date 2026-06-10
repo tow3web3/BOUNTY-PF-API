@@ -186,6 +186,21 @@ async function classifyPending(db: DB, openaiApiKey: string, max = 10) {
   return classified;
 }
 
+// ── Background sync (called from bounties route) ──────────────────────────────
+
+let lastSyncAt = 0;
+const SYNC_INTERVAL_MS = 60_000;
+
+export function triggerBackgroundSync(db: DB, openaiApiKey: string): void {
+  const now = Date.now();
+  if (now - lastSyncAt < SYNC_INTERVAL_MS) return;
+  lastSyncAt = now;
+  scrape()
+    .then((bounties) => upsertBounties(db, bounties))
+    .then(() => classifyPending(db, openaiApiKey, 10))
+    .catch(() => { /* best-effort */ });
+}
+
 // ── Router ────────────────────────────────────────────────────────────────────
 
 export function createCronRouter(db: DB, config: Config) {

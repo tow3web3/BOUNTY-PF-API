@@ -9,9 +9,10 @@ import {
   BountyStatusSchema,
 } from "@bountr/shared";
 import { classifyBounty } from "../services/classification";
+import { triggerBackgroundSync } from "./cron";
 import { logger } from "../logger";
 
-export function createBountiesRouter(db: DB) {
+export function createBountiesRouter(db: DB, openaiApiKey = "") {
   const router = new Hono();
 
   // GET /v1/bounties — paginated list of active bounties
@@ -24,6 +25,7 @@ export function createBountiesRouter(db: DB) {
       }),
     ),
     async (c) => {
+      triggerBackgroundSync(db, openaiApiKey);
       const { page, limit, status } = c.req.valid("query");
       const offset = (page - 1) * limit;
 
