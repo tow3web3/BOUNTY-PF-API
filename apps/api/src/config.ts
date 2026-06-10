@@ -12,7 +12,7 @@ const EnvSchema = z.object({
   DATABASE_URL: z.string().url(),
 
   // x402 — Solana wallet address that receives payments
-  PAYMENT_ADDRESS: z.string().min(32).optional().default(""),
+  PAYMENT_ADDRESS: z.string().optional().default(""),
   // Coinbase CDP facilitator: https://api.cdp.coinbase.com/platform/v2/x402
   // Use https://api.cdp.coinbase.com/platform/v2/x402 for mainnet testing
   X402_FACILITATOR_URL: z.string().url().default("https://api.cdp.coinbase.com/platform/v2/x402"),
