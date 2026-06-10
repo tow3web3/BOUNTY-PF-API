@@ -7,6 +7,7 @@ import { createHealthRouter } from "./routes/health";
 import { createBountiesRouter } from "./routes/bounties";
 import { createSubscriptionsRouter } from "./routes/subscriptions";
 import { createLandingRouter } from "./routes/landing";
+import { createCronRouter } from "./routes/cron";
 import { trackRevenue } from "./services/revenue";
 
 const db = createDb(config.DATABASE_URL);
@@ -36,6 +37,7 @@ app.route("/", createLandingRouter(db));
 app.route("/v1/health", createHealthRouter(db));
 app.route("/v1/bounties", createBountiesRouter(db));
 app.route("/v1/subscriptions", createSubscriptionsRouter(db));
+app.route("/cron", createCronRouter(db, config));
 
 app.notFound((c) => c.json({ error: "Not found" }, 404));
 app.onError((err, c) => {

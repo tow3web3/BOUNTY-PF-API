@@ -23,6 +23,7 @@ const EnvSchema = z.object({
     .default("solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp"),
 
   OPENAI_API_KEY: z.string().min(1).optional().default(""),
+  CRON_SECRET: z.string().optional().default(""),
 
   // Optional Solana RPC (defaults to public endpoint inside @x402/svm)
   SOLANA_RPC_URL: z.string().url().optional(),
