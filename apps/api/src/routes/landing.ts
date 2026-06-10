@@ -77,7 +77,7 @@ export function createLandingRouter(db: DB) {
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Bountr — x402 Bounty API</title>
+  <title>Bountr — Pump.fun GO Bounty API</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -235,7 +235,7 @@ export function createLandingRouter(db: DB) {
 
 <!-- Nav -->
 <nav>
-  <div class="logo">Agent<span>GO</span></div>
+  <div class="logo">BOUNTR</div>
   <div class="nav-links">
     <a href="#how-it-works">How it works</a>
     <a href="#endpoints">Endpoints</a>
@@ -246,12 +246,11 @@ export function createLandingRouter(db: DB) {
 
 <!-- Hero -->
 <div class="hero">
-  <div class="hero-tag">x402 · Solana · USDC Micropayments</div>
+  <div class="hero-tag">Pump.fun GO · AI Classification · Open API</div>
   <h1>Bounty API for<br/><span>AI Agents</span></h1>
   <p class="hero-sub">
-    Discover & filter automatable Pump.fun GO bounties.
-    Pay per request with Solana USDC — no signup, no API key, no subscription.
-    Just HTTP 402 + a transaction.
+    Discover automatable Pump.fun GO bounties classified by AI.
+    Free to use — no signup, no API key, no subscription.
   </p>
   <div class="hero-cta">
     <a href="#endpoints"><button class="btn btn-primary">View Endpoints</button></a>
@@ -274,90 +273,84 @@ export function createLandingRouter(db: DB) {
     <div class="stat-label">Total Rewards Available</div>
   </div>
   <div class="stat">
-    <div class="stat-value">x402 v2</div>
-    <div class="stat-label">Protocol</div>
+    <div class="stat-value">gpt-4o-mini</div>
+    <div class="stat-label">AI Model</div>
   </div>
   <div class="stat">
-    <div class="stat-value">mainnet</div>
-    <div class="stat-label">Solana Network</div>
+    <div class="stat-value">free</div>
+    <div class="stat-label">API Access</div>
   </div>
 </div>
 
 <!-- How it works -->
 <section id="how-it-works">
-  <h2>How x402 Works</h2>
-  <p class="section-sub">No API keys. No billing dashboards. Just HTTP + Solana.</p>
+  <h2>How It Works</h2>
+  <p class="section-sub">Pump.fun GO bounties → AI classification → open API.</p>
 
   <div class="flow">
     <div class="flow-step">
+      <div class="icon">🎯</div>
+      <div class="label">Pump.fun GO</div>
+      <div class="sub">creates bounties</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="icon">🔄</div>
+      <div class="label">Bountr syncs</div>
+      <div class="sub">every 60s<br/>on-demand</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
       <div class="icon">🤖</div>
-      <div class="label">Agent Request</div>
-      <div class="sub">GET /v1/bounties</div>
+      <div class="label">gpt-4o-mini</div>
+      <div class="sub">classifies &amp;<br/>ranks effort</div>
     </div>
     <div class="flow-arrow">→</div>
     <div class="flow-step">
-      <div class="icon">🔒</div>
-      <div class="label">402 Response</div>
-      <div class="sub">payment-required<br/>header with terms</div>
+      <div class="icon">📡</div>
+      <div class="label">REST API</div>
+      <div class="sub">free · no auth<br/>no rate limit</div>
     </div>
     <div class="flow-arrow">→</div>
     <div class="flow-step">
-      <div class="icon">💳</div>
-      <div class="label">Sign USDC tx</div>
-      <div class="sub">$0.01 on Solana<br/>mainnet</div>
-    </div>
-    <div class="flow-arrow">→</div>
-    <div class="flow-step">
-      <div class="icon">✅</div>
-      <div class="label">Facilitator</div>
-      <div class="sub">Verifies &amp; settles<br/>on-chain</div>
-    </div>
-    <div class="flow-arrow">→</div>
-    <div class="flow-step">
-      <div class="icon">📦</div>
-      <div class="label">200 + Data</div>
-      <div class="sub">Bounties JSON<br/>returned</div>
+      <div class="icon">💰</div>
+      <div class="label">Agent earns</div>
+      <div class="sub">claim bounty<br/>on pump.fun</div>
     </div>
   </div>
 
   <div class="two-col">
     <div>
-      <div class="code-label">1 — Agent receives 402</div>
+      <div class="code-label">Get active bounties</div>
       <div class="code-block">
-<span class="comment"># No payment header → 402</span>
-curl http://localhost:4021/v1/bounties
+curl <span class="string">"https://x402-api-six.vercel.app/api/v1/bounties?limit=5"</span>
 
-HTTP/1.1 <span class="number">402</span> Payment Required
-<span class="keyword">payment-required:</span> <span class="string">eyJ4NDAyVmVyc2lvbiI6Mi...</span>
-
-<span class="comment"># Decoded header contains:</span>
+HTTP/1.1 <span class="number">200</span> OK
 {
-  "x402Version": <span class="number">2</span>,
-  "accepts": [{
-    "scheme": <span class="string">"exact"</span>,
-    "network": <span class="string">"solana:EtWT..."</span>,
-    "amount": <span class="string">"10000"</span>,   <span class="comment">← $0.01 USDC</span>
-    "payTo": <span class="string">"EPjFWdd5..."</span>
-  }]
+  "data": [
+    { "title": <span class="string">"Build data pipeline"</span>,
+      "rewardUsd": <span class="string">"150.00"</span>,
+      "status": <span class="string">"active"</span>,
+      "link": <span class="string">"https://pump.fun/go/..."</span> }
+  ],
+  "pagination": { "total": <span class="number">1082</span> }
 }
       </div>
     </div>
     <div>
-      <div class="code-label">2 — Agent pays &amp; retries with X-PAYMENT header</div>
+      <div class="code-label">Bounty detail with AI classification</div>
       <div class="code-block">
-<span class="comment"># Build Solana tx, sign, attach proof</span>
-curl http://localhost:4021/v1/bounties \
-  -H <span class="string">"X-PAYMENT: &lt;base64-signed-tx&gt;"</span>
-
-HTTP/1.1 <span class="number">200</span> OK
-<span class="keyword">X-PAYMENT-RESPONSE:</span> <span class="string">eyJzdGF0dXMiOi...</span>
+curl <span class="string">"https://x402-api-six.vercel.app/api/v1/bounties/&lt;id&gt;"</span>
 
 {
-  "data": [
-    { "title": <span class="string">"Scrape top 100..."</span>,
-      "rewardUsd": <span class="string">"75.00"</span>,
-      "status": <span class="string">"active"</span> }
-  ]
+  "title": <span class="string">"Scrape top 100 tokens"</span>,
+  "rewardUsd": <span class="string">"75.00"</span>,
+  "classification": {
+    "category": <span class="string">"digital_automatable"</span>,
+    "confidence": <span class="number">0.94</span>,
+    "effortEstimate": <span class="string">"low"</span>,
+    "reasoning": <span class="string">"..."</span>
+  }
 }
       </div>
     </div>
@@ -438,12 +431,11 @@ HTTP/1.1 <span class="number">200</span> OK
 
 <!-- Subscription example -->
 <section style="border-top:1px solid var(--border)">
-  <h2>Subscribe to Alerts</h2>
-  <p class="section-sub">AI agents can subscribe to webhook alerts for new automatable bounties above a reward threshold.</p>
-  <div class="code-label">POST /v1/subscriptions — $0.10 / 24h</div>
+  <h2>Webhook Subscriptions</h2>
+  <p class="section-sub">Get notified when new bounties matching your filters appear.</p>
+  <div class="code-label">POST /v1/subscriptions — free · 24h window</div>
   <div class="code-block">
-curl -X POST http://localhost:4021/v1/subscriptions \
-  -H <span class="string">"X-PAYMENT: &lt;signed-x402-proof&gt;"</span> \
+curl -X POST https://x402-api-six.vercel.app/api/v1/subscriptions \
   -H <span class="string">"Content-Type: application/json"</span> \
   -d '{
     "webhookUrl": <span class="string">"https://your-agent.example.com/hook"</span>,
@@ -457,15 +449,15 @@ curl -X POST http://localhost:4021/v1/subscriptions \
 <span class="comment">→ 201 Created</span>
 {
   "id": <span class="string">"sub_01J..."</span>,
-  "expiresAt": <span class="string">"2026-06-07T..."</span>,
+  "expiresAt": <span class="string">"2026-06-11T..."</span>,
   "hmacSecret": <span class="string">"your-signing-secret"</span>
 }
   </div>
 </section>
 
 <footer>
-  <p>Bountr · x402 v2 · Solana mainnet · Built with Hono + Drizzle + @x402/hono</p>
-  <p style="margin-top:8px"><a href="https://x402.org" target="_blank">x402.org</a> · <a href="https://go.pump.fun" target="_blank">Pump.fun GO</a></p>
+  <p>Bountr · Solana mainnet · Built with Hono + Drizzle + gpt-4o-mini</p>
+  <p style="margin-top:8px"><a href="https://pump.fun/go" target="_blank">Pump.fun GO</a> · <a href="https://github.com/tow3web3/BOUNTY-PF-API" target="_blank">GitHub</a></p>
 </footer>
 
 </body>

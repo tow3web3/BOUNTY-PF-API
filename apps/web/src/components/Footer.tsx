@@ -7,7 +7,7 @@ export default function Footer() {
       >
         <div className="flex items-center gap-4 text-[10px] tracking-widest" style={{ color: "#2a2a2a" }}>
           <span>BUILT WITH</span>
-          {["Hono", "@x402/hono", "Drizzle ORM", "Vite + React"].map((t) => (
+          {["Hono", "Drizzle ORM", "Vite + React", "OpenAI"].map((t) => (
             <span
               key={t}
               className="px-2 py-0.5 border border-[#1a1a1a] text-[10px]"
@@ -27,17 +27,14 @@ export default function Footer() {
         <div className="flex items-center gap-6 text-[10px]" style={{ color: "#2a2a2a" }}>
           <span>BOUNTR</span>
           <span style={{ color: "#1a1a1a" }}>·</span>
-          <span>x402 v2</span>
-          <span style={{ color: "#1a1a1a" }}>·</span>
           <span>solana mainnet</span>
           <span style={{ color: "#1a1a1a" }}>·</span>
           <span>2026</span>
         </div>
         <div className="flex items-center gap-5 text-[10px]">
           {[
-            { label: "x402.org",                href: "https://x402.org" },
-            { label: "pump.fun/go",             href: "https://pump.fun/go" },
-            { label: "github.com/tow3web3/x402", href: "https://github.com/tow3web3/x402" },
+            { label: "pump.fun/go",              href: "https://pump.fun/go" },
+            { label: "github.com/tow3web3/BOUNTY-PF-API", href: "https://github.com/tow3web3/BOUNTY-PF-API" },
           ].map((l) => (
             <a
               key={l.label}

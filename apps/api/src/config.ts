@@ -11,17 +11,6 @@ const EnvSchema = z.object({
 
   DATABASE_URL: z.string().url(),
 
-  // x402 — Solana wallet address that receives payments
-  PAYMENT_ADDRESS: z.string().optional().default(""),
-  // Coinbase CDP facilitator: https://api.cdp.coinbase.com/platform/v2/x402
-  // Use https://api.cdp.coinbase.com/platform/v2/x402 for mainnet testing
-  X402_FACILITATOR_URL: z.string().url().default("https://api.cdp.coinbase.com/platform/v2/x402"),
-  // "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp" for mainnet,
-  // "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp" for mainnet
-  X402_NETWORK: z
-    .string()
-    .default("solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp"),
-
   OPENAI_API_KEY: z.string().min(1).optional().default(""),
   CRON_SECRET: z.string().optional().default(""),
 

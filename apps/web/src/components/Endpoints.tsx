@@ -198,7 +198,7 @@ export default function Endpoints() {
             no auth required · no rate limit · no API key
           </span>
           <span className="text-[10px]" style={{ color: "#2a2a2a" }}>
-            x402 protocol demo — pump.fun GO data
+            pump.fun GO data · gpt-4o-mini classification
           </span>
         </div>
       </div>

@@ -22,8 +22,6 @@ setInterval(() => {
 
 export function createRateLimiter(maxPerMinute: number): MiddlewareHandler {
   return async (c, next) => {
-    // x402 middleware sets the payer in a response header after settlement.
-    // We read it from the request-context variable set by the revenue hook.
     const payer = c.get("payerAddress") as string | undefined;
     if (!payer) {
       await next();

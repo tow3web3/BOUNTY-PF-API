@@ -4,14 +4,14 @@ import { useHealth, API_BASE } from "../hooks/useApi";
 type NavigateFn = (p: "home" | "docs" | "bounties") => void;
 
 const LINES = [
-  { t: 0,    kind: "cmd",     text: "$ curl /v1/bounties/automatable" },
+  { t: 0,    kind: "cmd",     text: "$ curl /v1/bounties?limit=3" },
   { t: 800,  kind: "ok",      text: "< HTTP/1.1 200 OK" },
   { t: 1100, kind: "data",    text: '< { "data": [' },
   { t: 1400, kind: "field",   text: '    { "title": "Build data pipeline",' },
   { t: 1700, kind: "field",   text: '      "rewardUsd": "150.00",' },
-  { t: 2000, kind: "field",   text: '      "effortEstimate": "low",' },
-  { t: 2300, kind: "accent",  text: '      "rewardToEffortRatio": 150.0 }' },
-  { t: 2700, kind: "data",    text: '  ], "pagination": { "total": 907 } }' },
+  { t: 2000, kind: "field",   text: '      "status": "active",' },
+  { t: 2300, kind: "accent",  text: '      "link": "https://pump.fun/go/..." }' },
+  { t: 2700, kind: "data",    text: '  ], "pagination": { "total": 1082 } }' },
   { t: 3200, kind: "comment", text: "# no signup · no key · no billing" },
 ];
 
